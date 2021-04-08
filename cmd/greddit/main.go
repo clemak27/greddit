@@ -4,23 +4,22 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"log"
 	"os"
 
 	"encoding/json"
 
 	"github.com/vartanbeno/go-reddit/v2/reddit"
+	"gitlab.com/clemak27/greddit/pkg/authentication"
 )
 
 var ctx = context.Background()
 
 func main() {
-	if err := run(); err != nil {
-		log.Fatal(err)
-	}
+	credentials, _ := getConfig()
+	authentication.GetClient(credentials)
 }
 
-func run() (err error) {
+func getConfig() (credentials reddit.Credentials, err error) {
 
 	jsonFile, err := os.Open("config.json")
 	if err != nil {
@@ -29,27 +28,7 @@ func run() (err error) {
 	defer jsonFile.Close()
 
 	byteValue, _ := io.ReadAll(jsonFile)
-	var credentials reddit.Credentials
 	json.Unmarshal(byteValue, &credentials)
 
-	client, err := reddit.NewClient(credentials)
-	if err != nil {
-		return
-	}
-
-	user, _, err := client.Account.Info(ctx)
-	if err != nil {
-		return
-	}
-
-	fmt.Println("Authenticated as ", user.Name)
-
-	// with open('subs.txt') as f:
-	//     lines = f.readlines()
-
-	//     for subreddit_name in lines:
-	//         subreddit = reddit.subreddit(subreddit_name)
-	//         subreddit.subscribe()
-
-	return
+	return credentials, nil
 }
