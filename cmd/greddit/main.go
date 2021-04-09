@@ -12,6 +12,7 @@ import (
 	"github.com/urfave/cli/v2"
 	"github.com/vartanbeno/go-reddit/v2/reddit"
 	"gitlab.com/clemak27/greddit/pkg/authentication"
+	"gitlab.com/clemak27/greddit/pkg/subreddits"
 )
 
 var ctx = context.Background()
@@ -39,6 +40,23 @@ func main() {
 					credentials, _ := getConfig(configPath)
 					authentication.GetClient(credentials)
 					return nil
+				},
+			},
+			{
+				Name:    "subreddits",
+				Usage:   "interact with subreddits",
+				Aliases: []string{"sr"},
+				Subcommands: []*cli.Command{
+					{
+						Name:  "list",
+						Usage: "prints a list of all subreddits you are subscribed to",
+						Action: func(c *cli.Context) error {
+							credentials, _ := getConfig(configPath)
+							client, _ := authentication.GetClient(credentials)
+							subreddits.PrintSubcriptions(client)
+							return nil
+						},
+					},
 				},
 			},
 		},
