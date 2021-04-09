@@ -25,3 +25,10 @@ func PrintSubcriptions(client *reddit.Client) (err error) {
 
 	return nil
 }
+
+func Subscribe(client *reddit.Client, subredditName string) (err error) {
+
+	fmt.Println("todo")
+
+	return nil
+}

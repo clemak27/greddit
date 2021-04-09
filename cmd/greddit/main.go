@@ -57,6 +57,18 @@ func main() {
 							return nil
 						},
 					},
+					{
+						Name:  "subscribe",
+						Usage: "subscribe to subreddit with `NAME`",
+						Action: func(c *cli.Context) error {
+							if c.Args().Len() == 0 {
+								fmt.Println("missing argument")
+								return nil
+							}
+							fmt.Println(c.Args().Get(0))
+							return nil
+						},
+					},
 				},
 			},
 		},
