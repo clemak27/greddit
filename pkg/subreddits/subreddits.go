@@ -11,7 +11,12 @@ var ctx = context.Background()
 
 func PrintSubcriptions(client *reddit.Client) (err error) {
 
-	subs, _, err := client.Subreddit.Subscribed(ctx, nil)
+	opts := reddit.ListOptions{Limit: 100}
+
+	subs, _, err := client.Subreddit.Subscribed(ctx, &reddit.ListSubredditOptions{
+		ListOptions: opts,
+	})
+
 	if err != nil {
 		fmt.Println("Failed to retrieve subreddit list:", err)
 		return
