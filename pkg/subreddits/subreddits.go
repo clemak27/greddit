@@ -31,10 +31,12 @@ func PrintSubcriptions(client *reddit.Client) (err error) {
 	return nil
 }
 
-func Subscribe(client *reddit.Client, subredditName string) (err error) {
+func Subscribe(client *reddit.Client, subredditNames []string) (err error) {
 
-	client.Subreddit.Subscribe(ctx, subredditName)
-	fmt.Printf("Subscribed to %v\n", subredditName)
+	for _, v := range subredditNames {
+		client.Subreddit.Subscribe(ctx, v)
+		fmt.Printf("Subscribed to %v\n", v)
+	}
 
 	return nil
 }
