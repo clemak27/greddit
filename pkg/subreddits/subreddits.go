@@ -33,7 +33,16 @@ func PrintSubcriptions(client *reddit.Client) (err error) {
 
 func Subscribe(client *reddit.Client, subredditName string) (err error) {
 
-	fmt.Println("todo")
+	client.Subreddit.Subscribe(ctx, subredditName)
+	fmt.Printf("Subscribed to %v\n", subredditName)
+
+	return nil
+}
+
+func Unsubscribe(client *reddit.Client, subredditName string) (err error) {
+
+	client.Subreddit.Unsubscribe(ctx, subredditName)
+	fmt.Printf("Unsubscribed from %v\n", subredditName)
 
 	return nil
 }
