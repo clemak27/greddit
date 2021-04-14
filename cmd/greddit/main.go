@@ -90,6 +90,25 @@ func main() {
 							},
 						},
 					},
+					{
+						Name:  "unsubscribe",
+						Usage: "unsubscribe from subreddit with `NAME`",
+						Action: func(c *cli.Context) error {
+
+							credentials, _ := getConfig(configPath)
+							client, _ := authentication.GetClient(credentials)
+
+							if !c.Args().Present() {
+								fmt.Println("missing argument, specify a subreddit name")
+								return nil
+							}
+
+							for _, v := range c.Args().Slice() {
+								subreddits.Unsubscribe(client, v)
+							}
+							return nil
+						},
+					},
 				},
 			},
 		},
