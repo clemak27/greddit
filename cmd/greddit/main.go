@@ -19,6 +19,7 @@ var ctx = context.Background()
 
 func main() {
 	var configPath string
+	var subPath string
 
 	app := &cli.App{
 		Name:  "greddit",
@@ -61,12 +62,32 @@ func main() {
 						Name:  "subscribe",
 						Usage: "subscribe to subreddit with `NAME`",
 						Action: func(c *cli.Context) error {
-							if c.Args().Len() == 0 {
-								fmt.Println("missing argument")
+
+							credentials, _ := getConfig(configPath)
+							client, _ := authentication.GetClient(credentials)
+
+							if subPath != "" {
+								subreddits.SubscribeFromFile(client, subPath)
+								return nil
+							}
+
+							if !c.Args().Present() {
+								fmt.Println("missing argument, specify a subreddit name")
 								return nil
 							}
 							fmt.Println(c.Args().Get(0))
+							for _, v := range c.Args().Slice() {
+								subreddits.Subscribe(client, v)
+							}
 							return nil
+						},
+						Flags: []cli.Flag{
+							&cli.StringFlag{
+								Name:        "file",
+								Aliases:     []string{"f"},
+								Usage:       "File containing a list of subreddits to subscribe to, separated by newlines.",
+								Destination: &subPath,
+							},
 						},
 					},
 				},
