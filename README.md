@@ -2,13 +2,13 @@
 
 ## About
 
-greddit is a cli utility to interact with the reddit api. I started this mainly because [](https://github.com/csu/export-saved-reddit) is kina unmaintained and I wanted to write something with Go. :)
+greddit is a cli utility to interact with the reddit api. I started this mainly because [export-saved-reddit](https://github.com/csu/export-saved-reddit) is kinda unmaintained and I wanted to write something with Go. :)
 
 ## Usage
 
 ### Create reddit app
 
-Here is a guide to get a client Id and client secret to use with the reddit API: [](https://github.com/reddit-archive/reddit/wiki/OAuth2-Quick-Start-Example#first-steps)
+Here is a guide to get a client Id and client secret to use with the reddit API: [https://github.com/reddit-archive/reddit/wiki/OAuth2-Quick-Start-Example#first-steps](https://github.com/reddit-archive/reddit/wiki/OAuth2-Quick-Start-Example#first-steps)
 The necessary data must be provided in a config file in this format:
 
 ```json
