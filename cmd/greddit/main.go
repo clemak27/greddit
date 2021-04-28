@@ -13,6 +13,7 @@ import (
 	"github.com/vartanbeno/go-reddit/v2/reddit"
 	"gitlab.com/clemak27/greddit/pkg/authentication"
 	"gitlab.com/clemak27/greddit/pkg/subreddits"
+	"gitlab.com/clemak27/greddit/pkg/upvoted"
 )
 
 var ctx = context.Background()
@@ -106,6 +107,22 @@ func main() {
 							for _, v := range c.Args().Slice() {
 								subreddits.Unsubscribe(client, v)
 							}
+							return nil
+						},
+					},
+				},
+			},
+			{
+				Name:  "upvoted",
+				Usage: "upvoted posts",
+				Subcommands: []*cli.Command{
+					{
+						Name:  "list",
+						Usage: "prints a list of all posts you have upvoted",
+						Action: func(c *cli.Context) error {
+							credentials, _ := getConfig(configPath)
+							client, _ := authentication.GetClient(credentials)
+							upvoted.PrintUpvoted(client)
 							return nil
 						},
 					},
