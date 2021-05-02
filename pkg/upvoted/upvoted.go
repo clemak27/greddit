@@ -18,7 +18,7 @@ func PrintUpvoted(client *reddit.Client) (err error) {
 	})
 
 	if err != nil {
-		fmt.Println("Failed to retrieve subreddit list:", err)
+		fmt.Println("Failed to retrieve post list:", err)
 		return
 	}
 
