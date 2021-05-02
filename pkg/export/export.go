@@ -40,10 +40,6 @@ func printResult(res map[string][]reddit.Post) {
 	}
 }
 
-type testy struct {
-	Name string
-}
-
 func generateMdFile(res map[string][]reddit.Post) {
 	filename := "./pkg/export/md.tmpl"
 	tpl, err := template.ParseFiles(filename)
@@ -51,8 +47,16 @@ func generateMdFile(res map[string][]reddit.Post) {
 		fmt.Println("Failed to parse template")
 	}
 
-	t := testy{Name: "hallo welt"}
+	f, err := os.Create("./export-upvoted.md")
+	if err != nil {
+		fmt.Println("Failed to open output file!")
+	}
 
-	tpl.Execute(os.Stdout, t)
+	err = tpl.Execute(f, res)
+	if err != nil {
+		fmt.Println("Failed to write output file!")
+	}
+
+	fmt.Printf("Wrte output to %s!", filename)
 
 }
