@@ -141,7 +141,7 @@ func main() {
 							&cli.StringFlag{
 								Name:        "format",
 								Aliases:     []string{"f"},
-								Value:       "html",
+								Value:       "md",
 								Usage:       "output format of the export",
 								Destination: &outputFormat,
 							}},
