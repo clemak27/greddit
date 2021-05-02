@@ -12,6 +12,7 @@ import (
 	"github.com/urfave/cli/v2"
 	"github.com/vartanbeno/go-reddit/v2/reddit"
 	"gitlab.com/clemak27/greddit/pkg/authentication"
+	"gitlab.com/clemak27/greddit/pkg/export"
 	"gitlab.com/clemak27/greddit/pkg/subreddits"
 	"gitlab.com/clemak27/greddit/pkg/upvoted"
 )
@@ -21,6 +22,7 @@ var ctx = context.Background()
 func main() {
 	var configPath string
 	var subPath string
+	var outputFormat string
 
 	app := &cli.App{
 		Name:  "greddit",
@@ -123,6 +125,30 @@ func main() {
 							credentials, _ := getConfig(configPath)
 							client, _ := authentication.GetClient(credentials)
 							upvoted.PrintUpvoted(client)
+							return nil
+						},
+					},
+				},
+			},
+			{
+				Name:  "export",
+				Usage: "export posts",
+				Subcommands: []*cli.Command{
+					{
+						Name:  "upvoted",
+						Usage: "exports a list of all posts you have upvoted",
+						Flags: []cli.Flag{
+							&cli.StringFlag{
+								Name:        "format",
+								Aliases:     []string{"f"},
+								Value:       "html",
+								Usage:       "output format of the export",
+								Destination: &outputFormat,
+							}},
+						Action: func(c *cli.Context) error {
+							credentials, _ := getConfig(configPath)
+							client, _ := authentication.GetClient(credentials)
+							export.ExportUpvoted(client)
 							return nil
 						},
 					},

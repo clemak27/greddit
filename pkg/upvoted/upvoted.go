@@ -30,3 +30,18 @@ func PrintUpvoted(client *reddit.Client) (err error) {
 
 	return nil
 }
+
+func GetUpvoted(client *reddit.Client) (l []*reddit.Post) {
+
+	opts := reddit.ListOptions{Limit: 100}
+
+	upvoted, _, err := client.User.Upvoted(ctx, &reddit.ListUserOverviewOptions{
+		ListOptions: opts,
+	})
+	if err != nil {
+		fmt.Println("Failed to retrieve post list:", err)
+		return
+	}
+
+	return upvoted
+}
