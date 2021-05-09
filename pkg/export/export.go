@@ -41,13 +41,15 @@ func printResult(res map[string][]reddit.Post) {
 }
 
 func generateMdFile(res map[string][]reddit.Post) {
-	filename := "./pkg/export/md.tmpl"
-	tpl, err := template.ParseFiles(filename)
+	fn := "./pkg/export/md.tmpl"
+	ofn := "./export-upvoted.md"
+
+	tpl, err := template.ParseFiles(fn)
 	if err != nil {
 		fmt.Println("Failed to parse template")
 	}
 
-	f, err := os.Create("./export-upvoted.md")
+	f, err := os.Create(ofn)
 	if err != nil {
 		fmt.Println("Failed to open output file!")
 	}
@@ -57,6 +59,6 @@ func generateMdFile(res map[string][]reddit.Post) {
 		fmt.Println("Failed to write output file!")
 	}
 
-	fmt.Printf("Wrte output to %s!", filename)
+	fmt.Printf("Wrote output to %s!", ofn)
 
 }
