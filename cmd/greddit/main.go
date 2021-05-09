@@ -148,7 +148,7 @@ func main() {
 						Action: func(c *cli.Context) error {
 							credentials, _ := getConfig(configPath)
 							client, _ := authentication.GetClient(credentials)
-							export.ExportUpvoted(client)
+							export.ExportUpvoted(client, outputFormat)
 							return nil
 						},
 					},

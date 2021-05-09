@@ -12,7 +12,7 @@ import (
 
 var ctx = context.Background()
 
-func ExportUpvoted(client *reddit.Client) (err error) {
+func ExportUpvoted(client *reddit.Client, format string) (err error) {
 
 	l := upvoted.GetUpvoted(client)
 	var res = make(map[string][]reddit.Post, 0)
@@ -26,7 +26,13 @@ func ExportUpvoted(client *reddit.Client) (err error) {
 		}
 	}
 
-	generateMdFile(res)
+	if format == "md" {
+		generateMdFile(res)
+	} else if format == "html" {
+		generateHTMLFile(res)
+	} else {
+		fmt.Printf("Unknown output format %s! Supported formats are: md, html", format)
+	}
 
 	return nil
 }
