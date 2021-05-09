@@ -60,5 +60,26 @@ func generateMdFile(res map[string][]reddit.Post) {
 	}
 
 	fmt.Printf("Wrote output to %s!", ofn)
+}
 
+func generateHTMLFile(res map[string][]reddit.Post) {
+	fn := "./pkg/export/html.tmpl"
+	ofn := "./export-upvoted.html"
+
+	tpl, err := template.ParseFiles(fn)
+	if err != nil {
+		fmt.Println("Failed to parse template")
+	}
+
+	f, err := os.Create(ofn)
+	if err != nil {
+		fmt.Println("Failed to open output file!")
+	}
+
+	err = tpl.Execute(f, res)
+	if err != nil {
+		fmt.Println("Failed to write output file!")
+	}
+
+	fmt.Printf("Wrote output to %s!", ofn)
 }
