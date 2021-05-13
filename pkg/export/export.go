@@ -26,13 +26,14 @@ func ExportUpvoted(client *reddit.Client, format string) (err error) {
 		}
 	}
 
-	if format == "md" {
+	switch format {
+	case "md":
 		generateMdFile(res)
-	} else if format == "html" {
+	case "html":
 		generateHTMLFile(res)
-	} else if format == "txt" {
+	case "txt":
 		generateTxtFile(res)
-	} else {
+	default:
 		fmt.Printf("Unknown output format %s! Supported formats are: md, html", format)
 	}
 
