@@ -1,4 +1,4 @@
-module gitlab.com/clemak27/greddit
+module github.com/clemak27/greddit
 
 go 1.16
 

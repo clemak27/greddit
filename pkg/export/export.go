@@ -7,7 +7,7 @@ import (
 	"text/template"
 
 	"github.com/vartanbeno/go-reddit/v2/reddit"
-	"gitlab.com/clemak27/greddit/pkg/upvoted"
+	"github.com/clemak27/greddit/pkg/upvoted"
 )
 
 var ctx = context.Background()

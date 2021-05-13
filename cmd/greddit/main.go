@@ -11,10 +11,10 @@ import (
 
 	"github.com/urfave/cli/v2"
 	"github.com/vartanbeno/go-reddit/v2/reddit"
-	"gitlab.com/clemak27/greddit/pkg/authentication"
-	"gitlab.com/clemak27/greddit/pkg/export"
-	"gitlab.com/clemak27/greddit/pkg/subreddits"
-	"gitlab.com/clemak27/greddit/pkg/upvoted"
+	"github.com/clemak27/greddit/pkg/authentication"
+	"github.com/clemak27/greddit/pkg/export"
+	"github.com/clemak27/greddit/pkg/subreddits"
+	"github.com/clemak27/greddit/pkg/upvoted"
 )
 
 var ctx = context.Background()
