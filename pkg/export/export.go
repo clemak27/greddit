@@ -40,7 +40,7 @@ func ExportUpvoted(client *reddit.Client, format string) (err error) {
 		ofn := "./export-upvoted.txt"
 		generateOutputFile(res, fn, ofn)
 	default:
-		fmt.Printf("Unknown output format %s! Supported formats are: md, html", format)
+		fmt.Printf("Unknown output format %s! Supported formats are: md, html, txt", format)
 	}
 
 	return nil
