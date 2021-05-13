@@ -24,6 +24,19 @@ func PrintSubcriptions(client *reddit.Client) (err error) {
 		return
 	}
 
+	if len(subs) == 100 {
+		fli := subs[99].FullID
+		nopts := reddit.ListOptions{Limit: 100, After: fli}
+		nsl, _, err := client.Subreddit.Subscribed(ctx, &reddit.ListSubredditOptions{
+			ListOptions: nopts,
+		})
+		subs = append(subs, nsl...)
+		if err != nil {
+			fmt.Println("Failed to retrieve subreddit list:", err)
+		}
+
+	}
+
 	fmt.Printf("You are subscribed to %v subreddits:\n", len(subs))
 
 	for _, s := range subs {
