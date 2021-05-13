@@ -1,0 +1,5 @@
+{{- range $index, $element := . }}
+{{- range $element }}
+{{ .URL }}
+{{- end }}
+{{- end }}

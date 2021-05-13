@@ -1,0 +1,10 @@
+# exported upvoted posts
+
+{{- range $index, $element := . }}
+
+## {{ $index }}
+{{ range $element }}
+- [{{ .Title }}]({{ .URL }})
+{{- end }}
+
+{{- end }}
