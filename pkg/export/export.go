@@ -30,6 +30,8 @@ func ExportUpvoted(client *reddit.Client, format string) (err error) {
 		generateMdFile(res)
 	} else if format == "html" {
 		generateHTMLFile(res)
+	} else if format == "txt" {
+		generateTxtFile(res)
 	} else {
 		fmt.Printf("Unknown output format %s! Supported formats are: md, html", format)
 	}
@@ -71,6 +73,28 @@ func generateMdFile(res map[string][]reddit.Post) {
 func generateHTMLFile(res map[string][]reddit.Post) {
 	fn := "./pkg/export/html.tmpl"
 	ofn := "./export-upvoted.html"
+
+	tpl, err := template.ParseFiles(fn)
+	if err != nil {
+		fmt.Println("Failed to parse template")
+	}
+
+	f, err := os.Create(ofn)
+	if err != nil {
+		fmt.Println("Failed to open output file!")
+	}
+
+	err = tpl.Execute(f, res)
+	if err != nil {
+		fmt.Println("Failed to write output file!")
+	}
+
+	fmt.Printf("Wrote output to %s!", ofn)
+}
+
+func generateTxtFile(res map[string][]reddit.Post) {
+	fn := "./pkg/export/txt.tmpl"
+	ofn := "./export-upvoted.txt"
 
 	tpl, err := template.ParseFiles(fn)
 	if err != nil {
