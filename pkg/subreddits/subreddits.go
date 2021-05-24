@@ -44,21 +44,6 @@ func GetSubscriptions(client *reddit.Client) (l []*reddit.Subreddit, err error) 
 	return subs, nil
 }
 
-func retrieveMore(subs []*reddit.Subreddit, client *reddit.Client) []*reddit.Subreddit {
-	fli := subs[len(subs)-1].FullID
-	nopts := reddit.ListOptions{Limit: 100, After: fli}
-	nsl, _, err := client.Subreddit.Subscribed(ctx, &reddit.ListSubredditOptions{
-		ListOptions: nopts,
-	})
-	if err != nil {
-		fmt.Println("Failed to retrieve subreddit list:", err)
-	}
-	if len(nsl) == 100 {
-		nsl = append(nsl, retrieveMore(nsl, client)...)
-	}
-	return nsl
-}
-
 func Subscribe(client *reddit.Client, name string) (err error) {
 
 	client.Subreddit.Subscribe(ctx, name)
@@ -107,4 +92,19 @@ func scanLines(path string) ([]string, error) {
 	}
 
 	return lines, nil
+}
+
+func retrieveMore(subs []*reddit.Subreddit, client *reddit.Client) []*reddit.Subreddit {
+	fli := subs[len(subs)-1].FullID
+	nopts := reddit.ListOptions{Limit: 100, After: fli}
+	nsl, _, err := client.Subreddit.Subscribed(ctx, &reddit.ListSubredditOptions{
+		ListOptions: nopts,
+	})
+	if err != nil {
+		fmt.Println("Failed to retrieve subreddit list:", err)
+	}
+	if len(nsl) == 100 {
+		nsl = append(nsl, retrieveMore(nsl, client)...)
+	}
+	return nsl
 }
