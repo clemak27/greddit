@@ -34,5 +34,24 @@ func GetUpvoted(client *reddit.Client) (l []*reddit.Post) {
 		return
 	}
 
+	if len(upvoted) == 100 {
+		upvoted = append(upvoted, retrieveMore(upvoted, client)...)
+	}
+
 	return upvoted
+}
+
+func retrieveMore(posts []*reddit.Post, client *reddit.Client) []*reddit.Post {
+	fli := posts[len(posts)-1].FullID
+	nopts := reddit.ListOptions{Limit: 100, After: fli}
+	npl, _, err := client.User.Upvoted(ctx, &reddit.ListUserOverviewOptions{
+		ListOptions: nopts,
+	})
+	if err != nil {
+		fmt.Println("Failed to retrieve subreddit list:", err)
+	}
+	if len(npl) == 100 {
+		npl = append(npl, retrieveMore(npl, client)...)
+	}
+	return npl
 }
