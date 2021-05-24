@@ -13,6 +13,19 @@ var ctx = context.Background()
 
 func PrintSubcriptions(client *reddit.Client) (err error) {
 
+	subs, _ := GetSubscriptions(client)
+
+	fmt.Printf("You are subscribed to %v subreddits:\n", len(subs))
+
+	for _, s := range subs {
+		fmt.Println(s.Name)
+	}
+
+	return nil
+}
+
+func GetSubscriptions(client *reddit.Client) (l []*reddit.Subreddit, err error) {
+
 	opts := reddit.ListOptions{Limit: 100}
 
 	subs, _, err := client.Subreddit.Subscribed(ctx, &reddit.ListSubredditOptions{
@@ -28,13 +41,7 @@ func PrintSubcriptions(client *reddit.Client) (err error) {
 		subs = append(subs, retrieveMore(subs, client)...)
 	}
 
-	fmt.Printf("You are subscribed to %v subreddits:\n", len(subs))
-
-	for _, s := range subs {
-		fmt.Println(s.Name)
-	}
-
-	return nil
+	return subs, nil
 }
 
 func retrieveMore(subs []*reddit.Subreddit, client *reddit.Client) []*reddit.Subreddit {
