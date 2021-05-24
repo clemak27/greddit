@@ -7,26 +7,6 @@ import (
 	"github.com/vartanbeno/go-reddit/v2/reddit"
 )
 
-func TestPrintSubcriptions(t *testing.T) {
-	type args struct {
-		client *reddit.Client
-	}
-	tests := []struct {
-		name    string
-		args    args
-		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if err := PrintSubcriptions(tt.args.client); (err != nil) != tt.wantErr {
-				t.Errorf("PrintSubcriptions() error = %v, wantErr %v", err, tt.wantErr)
-			}
-		})
-	}
-}
-
 func TestGetSubscriptions(t *testing.T) {
 	type args struct {
 		client *reddit.Client
