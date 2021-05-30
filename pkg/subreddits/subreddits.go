@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/clemak27/greddit/pkg/client_wrapper"
 	"github.com/vartanbeno/go-reddit/v2/reddit"
 )
 
@@ -22,6 +23,26 @@ func PrintSubcriptions(client *reddit.Client) (err error) {
 	}
 
 	return nil
+}
+
+func GetSubscriptionsNew(rc client_wrapper.RedditClient) (l []*reddit.Subreddit, err error) {
+
+	opts := reddit.ListOptions{Limit: 100}
+
+	subs, _, err := rc.Subs(ctx, &reddit.ListSubredditOptions{
+		ListOptions: opts,
+	})
+
+	if err != nil {
+		fmt.Println("Failed to retrieve subreddit list:", err)
+		return
+	}
+
+	// if len(subs) == 100 {
+	// 	subs = append(subs, retrieveMore(subs, client)...)
+	// }
+
+	return subs, nil
 }
 
 func GetSubscriptions(client *reddit.Client) (l []*reddit.Subreddit, err error) {

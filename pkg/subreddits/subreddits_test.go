@@ -1,15 +1,32 @@
 package subreddits
 
 import (
+	"context"
 	"reflect"
 	"testing"
 
+	"github.com/clemak27/greddit/pkg/client_wrapper"
 	"github.com/vartanbeno/go-reddit/v2/reddit"
 )
 
-func TestGetSubscriptions(t *testing.T) {
+type mockClient struct {
+	Client *reddit.Client
+}
+
+func (r *mockClient) Subs(ctx context.Context, opts *reddit.ListSubredditOptions) ([]*reddit.Subreddit, *reddit.Response, error) {
+	s := []*reddit.Subreddit{
+		{
+			ID:     "1",
+			FullID: "111",
+			Name:   "My awesome subreddit",
+		},
+	}
+	return s, nil, nil
+}
+
+func TestGetSubscriptionsNew(t *testing.T) {
 	type args struct {
-		client *reddit.Client
+		rc client_wrapper.RedditClient
 	}
 	tests := []struct {
 		name    string
@@ -17,127 +34,30 @@ func TestGetSubscriptions(t *testing.T) {
 		wantL   []*reddit.Subreddit
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			name: "succ",
+			args: args{
+				rc: &mockClient{},
+			},
+			wantL: []*reddit.Subreddit{
+				{
+					ID:     "1",
+					FullID: "111",
+					Name:   "My awesome subreddit",
+				},
+			},
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gotL, err := GetSubscriptions(tt.args.client)
+			gotL, err := GetSubscriptionsNew(tt.args.rc)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("GetSubscriptions() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("GetSubscriptionsNew() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(gotL, tt.wantL) {
-				t.Errorf("GetSubscriptions() = %v, want %v", gotL, tt.wantL)
-			}
-		})
-	}
-}
-
-func TestSubscribe(t *testing.T) {
-	type args struct {
-		client *reddit.Client
-		name   string
-	}
-	tests := []struct {
-		name    string
-		args    args
-		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if err := Subscribe(tt.args.client, tt.args.name); (err != nil) != tt.wantErr {
-				t.Errorf("Subscribe() error = %v, wantErr %v", err, tt.wantErr)
-			}
-		})
-	}
-}
-
-func TestSubscribeFromFile(t *testing.T) {
-	type args struct {
-		client  *reddit.Client
-		subPath string
-	}
-	tests := []struct {
-		name    string
-		args    args
-		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if err := SubscribeFromFile(tt.args.client, tt.args.subPath); (err != nil) != tt.wantErr {
-				t.Errorf("SubscribeFromFile() error = %v, wantErr %v", err, tt.wantErr)
-			}
-		})
-	}
-}
-
-func TestUnsubscribe(t *testing.T) {
-	type args struct {
-		client        *reddit.Client
-		subredditName string
-	}
-	tests := []struct {
-		name    string
-		args    args
-		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if err := Unsubscribe(tt.args.client, tt.args.subredditName); (err != nil) != tt.wantErr {
-				t.Errorf("Unsubscribe() error = %v, wantErr %v", err, tt.wantErr)
-			}
-		})
-	}
-}
-
-func Test_scanLines(t *testing.T) {
-	type args struct {
-		path string
-	}
-	tests := []struct {
-		name    string
-		args    args
-		want    []string
-		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := scanLines(tt.args.path)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("scanLines() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("scanLines() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func Test_retrieveMore(t *testing.T) {
-	type args struct {
-		subs   []*reddit.Subreddit
-		client *reddit.Client
-	}
-	tests := []struct {
-		name string
-		args args
-		want []*reddit.Subreddit
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := retrieveMore(tt.args.subs, tt.args.client); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("retrieveMore() = %v, want %v", got, tt.want)
+				t.Errorf("GetSubscriptionsNew() = %v, want %v", gotL, tt.wantL)
 			}
 		})
 	}
