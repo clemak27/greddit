@@ -14,7 +14,7 @@ var ctx = context.Background()
 
 func PrintSubcriptions(client *reddit.Client) (err error) {
 
-	subs, _ := GetSubscriptions(client)
+	subs, _ := GetSubscriptions(&client_wrapper.RC{client})
 
 	fmt.Printf("You are subscribed to %v subreddits:\n", len(subs))
 
@@ -25,7 +25,7 @@ func PrintSubcriptions(client *reddit.Client) (err error) {
 	return nil
 }
 
-func GetSubscriptionsNew(rc client_wrapper.RedditClient) (l []*reddit.Subreddit, err error) {
+func GetSubscriptions(rc client_wrapper.RedditClient) (l []*reddit.Subreddit, err error) {
 
 	opts := reddit.ListOptions{Limit: 100}
 
@@ -38,28 +38,8 @@ func GetSubscriptionsNew(rc client_wrapper.RedditClient) (l []*reddit.Subreddit,
 		return
 	}
 
-	// if len(subs) == 100 {
-	// 	subs = append(subs, retrieveMore(subs, client)...)
-	// }
-
-	return subs, nil
-}
-
-func GetSubscriptions(client *reddit.Client) (l []*reddit.Subreddit, err error) {
-
-	opts := reddit.ListOptions{Limit: 100}
-
-	subs, _, err := client.Subreddit.Subscribed(ctx, &reddit.ListSubredditOptions{
-		ListOptions: opts,
-	})
-
-	if err != nil {
-		fmt.Println("Failed to retrieve subreddit list:", err)
-		return
-	}
-
 	if len(subs) == 100 {
-		subs = append(subs, retrieveMore(subs, client)...)
+		subs = append(subs, retrieveMore(subs, rc)...)
 	}
 
 	return subs, nil
@@ -115,17 +95,17 @@ func scanLines(path string) ([]string, error) {
 	return lines, nil
 }
 
-func retrieveMore(subs []*reddit.Subreddit, client *reddit.Client) []*reddit.Subreddit {
+func retrieveMore(subs []*reddit.Subreddit, rc client_wrapper.RedditClient) []*reddit.Subreddit {
 	fli := subs[len(subs)-1].FullID
 	nopts := reddit.ListOptions{Limit: 100, After: fli}
-	nsl, _, err := client.Subreddit.Subscribed(ctx, &reddit.ListSubredditOptions{
+	nsl, _, err := rc.Subs(ctx, &reddit.ListSubredditOptions{
 		ListOptions: nopts,
 	})
 	if err != nil {
 		fmt.Println("Failed to retrieve subreddit list:", err)
 	}
 	if len(nsl) == 100 {
-		nsl = append(nsl, retrieveMore(nsl, client)...)
+		nsl = append(nsl, retrieveMore(nsl, rc)...)
 	}
 	return nsl
 }
