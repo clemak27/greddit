@@ -13,7 +13,7 @@ type mockClient struct {
 	Client *reddit.Client
 }
 
-func (r *mockClient) Subs(ctx context.Context, opts *reddit.ListSubredditOptions) ([]*reddit.Subreddit, *reddit.Response, error) {
+func (r *mockClient) Subscribed(ctx context.Context, opts *reddit.ListSubredditOptions) ([]*reddit.Subreddit, *reddit.Response, error) {
 	s := []*reddit.Subreddit{
 		{
 			ID:     "1",
@@ -26,7 +26,7 @@ func (r *mockClient) Subs(ctx context.Context, opts *reddit.ListSubredditOptions
 
 func TestGetSubscriptionsNew(t *testing.T) {
 	type args struct {
-		rc client_wrapper.RedditClient
+		rc client_wrapper.ClientFunctions
 	}
 	tests := []struct {
 		name    string
