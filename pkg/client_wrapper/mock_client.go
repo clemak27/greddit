@@ -22,11 +22,13 @@ func (r *MockClient) Subscribed(ctx context.Context, opts *reddit.ListSubredditO
 }
 
 func (r *MockClient) Subscribe(ctx context.Context, subreddit string) (*reddit.Response, error) {
-	return nil, nil
+	res := &reddit.Response{}
+	return res, nil
 }
 
 func (r *MockClient) Unsubscribe(ctx context.Context, subreddit string) (*reddit.Response, error) {
-	return nil, nil
+	res := &reddit.Response{}
+	return res, nil
 }
 
 func (r *MockClient) Upvoted(ctx context.Context, opts *reddit.ListUserOverviewOptions) ([]*reddit.Post, *reddit.Response, error) {
