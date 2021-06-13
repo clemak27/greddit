@@ -10,7 +10,7 @@ import (
 
 func TestGetUpvoted(t *testing.T) {
 	type args struct {
-		rc client_wrapper.ClientFunctions
+		rc client_wrapper.ClientWrapper
 	}
 	tests := []struct {
 		name    string

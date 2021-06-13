@@ -25,7 +25,7 @@ func PrintSubcriptions(client *reddit.Client) (err error) {
 	return nil
 }
 
-func GetSubscriptions(rc client_wrapper.ClientFunctions) (l []*reddit.Subreddit, err error) {
+func GetSubscriptions(rc client_wrapper.ClientWrapper) (l []*reddit.Subreddit, err error) {
 
 	opts := reddit.ListOptions{Limit: 100}
 
@@ -95,7 +95,7 @@ func scanLines(path string) ([]string, error) {
 	return lines, nil
 }
 
-func retrieveMore(subs []*reddit.Subreddit, rc client_wrapper.ClientFunctions) []*reddit.Subreddit {
+func retrieveMore(subs []*reddit.Subreddit, rc client_wrapper.ClientWrapper) []*reddit.Subreddit {
 	fli := subs[len(subs)-1].FullID
 	nopts := reddit.ListOptions{Limit: 100, After: fli}
 	nsl, _, err := rc.Subscribed(ctx, &reddit.ListSubredditOptions{

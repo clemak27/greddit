@@ -23,7 +23,7 @@ func PrintUpvoted(client *reddit.Client) (err error) {
 	return nil
 }
 
-func GetUpvoted(rc client_wrapper.ClientFunctions) (l []*reddit.Post, err error) {
+func GetUpvoted(rc client_wrapper.ClientWrapper) (l []*reddit.Post, err error) {
 
 	opts := reddit.ListOptions{Limit: 100}
 
@@ -43,7 +43,7 @@ func GetUpvoted(rc client_wrapper.ClientFunctions) (l []*reddit.Post, err error)
 	return upvoted, nil
 }
 
-func retrieveMore(subs []*reddit.Post, rc client_wrapper.ClientFunctions) []*reddit.Post {
+func retrieveMore(subs []*reddit.Post, rc client_wrapper.ClientWrapper) []*reddit.Post {
 	fli := subs[len(subs)-1].FullID
 	nopts := reddit.ListOptions{Limit: 100, After: fli}
 	nsl, _, err := rc.Upvoted(ctx, &reddit.ListUserOverviewOptions{
