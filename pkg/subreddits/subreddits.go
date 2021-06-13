@@ -14,7 +14,7 @@ var ctx = context.Background()
 
 func PrintSubcriptions(client *reddit.Client) (err error) {
 
-	subs, _ := GetSubscriptions(&client_wrapper.RedditClient{client})
+	subs, _ := GetSubscriptions(&client_wrapper.RedditClient{Client: client})
 
 	fmt.Printf("You are subscribed to %v subreddits:\n", len(subs))
 
