@@ -1,4 +1,4 @@
-package subreddits
+package upvoted
 
 import (
 	"context"
@@ -14,40 +14,42 @@ type mockClient struct {
 }
 
 func (r *mockClient) Subscribed(ctx context.Context, opts *reddit.ListSubredditOptions) ([]*reddit.Subreddit, *reddit.Response, error) {
-	s := []*reddit.Subreddit{
-		{
-			ID:     "1",
-			FullID: "111",
-			Name:   "My awesome subreddit",
-		},
-	}
-	return s, nil, nil
-}
-
-func (r *mockClient) Upvoted(ctx context.Context, opts *reddit.ListUserOverviewOptions) ([]*reddit.Post, *reddit.Response, error) {
 	return nil, nil, nil
 }
 
-func TestGetSubscriptions(t *testing.T) {
+func (r *mockClient) Upvoted(ctx context.Context, opts *reddit.ListUserOverviewOptions) ([]*reddit.Post, *reddit.Response, error) {
+	u := []*reddit.Post{
+		{
+			ID:     "1",
+			FullID: "111",
+			URL:    "localhost:8080",
+			Title:  "testPost",
+		},
+	}
+	return u, nil, nil
+}
+
+func TestGetUpvoted(t *testing.T) {
 	type args struct {
 		rc client_wrapper.ClientFunctions
 	}
 	tests := []struct {
 		name    string
 		args    args
-		wantL   []*reddit.Subreddit
+		wantL   []*reddit.Post
 		wantErr bool
 	}{
 		{
-			name: "GetSubscriptions is successfull",
+			name: "GetUpvoted is successfull",
 			args: args{
 				rc: &mockClient{},
 			},
-			wantL: []*reddit.Subreddit{
+			wantL: []*reddit.Post{
 				{
 					ID:     "1",
 					FullID: "111",
-					Name:   "My awesome subreddit",
+					URL:    "localhost:8080",
+					Title:  "testPost",
 				},
 			},
 			wantErr: false,
@@ -55,13 +57,13 @@ func TestGetSubscriptions(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gotL, err := GetSubscriptions(tt.args.rc)
+			gotL, err := GetUpvoted(tt.args.rc)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("GetSubscriptions() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("GetUpvoted() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(gotL, tt.wantL) {
-				t.Errorf("GetSubscriptions() = %v, want %v", gotL, tt.wantL)
+				t.Errorf("GetUpvoted() = %v, want %v", gotL, tt.wantL)
 			}
 		})
 	}

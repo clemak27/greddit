@@ -6,15 +6,16 @@ import (
 	"os"
 	"text/template"
 
-	"github.com/vartanbeno/go-reddit/v2/reddit"
+	"github.com/clemak27/greddit/pkg/client_wrapper"
 	"github.com/clemak27/greddit/pkg/upvoted"
+	"github.com/vartanbeno/go-reddit/v2/reddit"
 )
 
 var ctx = context.Background()
 
 func ExportUpvoted(client *reddit.Client, format string) (err error) {
 
-	l := upvoted.GetUpvoted(client)
+	l, err := upvoted.GetUpvoted(&client_wrapper.RedditClient{Client: client})
 	var res = make(map[string][]reddit.Post, 0)
 
 	for _, p := range l {
