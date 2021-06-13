@@ -10,9 +10,9 @@ import (
 
 var ctx = context.Background()
 
-func PrintUpvoted(client *reddit.Client) (err error) {
+func PrintUpvoted(rc client_wrapper.ClientWrapper) (err error) {
 
-	upvoted, _ := GetUpvoted(&client_wrapper.RedditClient{Client: client})
+	upvoted, _ := GetUpvoted(rc)
 
 	fmt.Printf("You have upvoted %v posts!\n", len(upvoted))
 

@@ -13,9 +13,9 @@ import (
 
 var ctx = context.Background()
 
-func ExportUpvoted(client *reddit.Client, format string) (err error) {
+func ExportUpvoted(rc client_wrapper.ClientWrapper, format string) (err error) {
 
-	l, err := upvoted.GetUpvoted(&client_wrapper.RedditClient{Client: client})
+	l, err := upvoted.GetUpvoted(rc)
 	var res = make(map[string][]reddit.Post, 0)
 
 	for _, p := range l {

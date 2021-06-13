@@ -17,6 +17,16 @@ func (r *RedditClient) Subscribed(ctx context.Context, opts *reddit.ListSubreddi
 	return s, res, err
 }
 
+func (r *RedditClient) Subscribe(ctx context.Context, subreddit string) (*reddit.Response, error) {
+	res, err := r.Client.Subreddit.Subscribe(ctx, subreddit)
+	return res, err
+}
+
+func (r *RedditClient) Unsubscribe(ctx context.Context, subreddit string) (*reddit.Response, error) {
+	res, err := r.Client.Subreddit.Unsubscribe(ctx, subreddit)
+	return res, err
+}
+
 func (r *RedditClient) Upvoted(ctx context.Context, opts *reddit.ListUserOverviewOptions) ([]*reddit.Post, *reddit.Response, error) {
 	s, res, err := r.Client.User.Upvoted(ctx, opts)
 	return s, res, err
