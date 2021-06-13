@@ -24,7 +24,7 @@ func (r *mockClient) Subscribed(ctx context.Context, opts *reddit.ListSubredditO
 	return s, nil, nil
 }
 
-func TestGetSubscriptionsNew(t *testing.T) {
+func TestGetSubscriptions(t *testing.T) {
 	type args struct {
 		rc client_wrapper.ClientFunctions
 	}
@@ -35,7 +35,7 @@ func TestGetSubscriptionsNew(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "succ",
+			name: "GetSubscriptions is successfull",
 			args: args{
 				rc: &mockClient{},
 			},
@@ -53,11 +53,11 @@ func TestGetSubscriptionsNew(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			gotL, err := GetSubscriptions(tt.args.rc)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("GetSubscriptionsNew() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("GetSubscriptions() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(gotL, tt.wantL) {
-				t.Errorf("GetSubscriptionsNew() = %v, want %v", gotL, tt.wantL)
+				t.Errorf("GetSubscriptions() = %v, want %v", gotL, tt.wantL)
 			}
 		})
 	}
