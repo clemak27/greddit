@@ -47,15 +47,6 @@ func ExportUpvoted(rc client_wrapper.ClientWrapper, format string) (err error) {
 	return nil
 }
 
-func printResult(res map[string][]reddit.Post) {
-	for k := range res {
-		fmt.Println(k)
-		for _, v := range res[k] {
-			fmt.Printf("  %s\n", v.Title)
-		}
-	}
-}
-
 func generateOutputFile(res map[string][]reddit.Post, fn string, ofn string) {
 
 	tpl, err := template.ParseFiles(fn)
