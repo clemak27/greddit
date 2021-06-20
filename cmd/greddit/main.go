@@ -9,12 +9,13 @@ import (
 
 	"encoding/json"
 
-	"github.com/urfave/cli/v2"
-	"github.com/vartanbeno/go-reddit/v2/reddit"
 	"github.com/clemak27/greddit/pkg/authentication"
+	"github.com/clemak27/greddit/pkg/client_wrapper"
 	"github.com/clemak27/greddit/pkg/export"
 	"github.com/clemak27/greddit/pkg/subreddits"
 	"github.com/clemak27/greddit/pkg/upvoted"
+	"github.com/urfave/cli/v2"
+	"github.com/vartanbeno/go-reddit/v2/reddit"
 )
 
 var ctx = context.Background()
@@ -41,8 +42,7 @@ func main() {
 				Name:  "authenticate",
 				Usage: "authenticates with the reddit api. This command is mainly for testing if the config is set correctly.",
 				Action: func(c *cli.Context) error {
-					credentials, _ := getConfig(configPath)
-					authentication.GetClient(credentials)
+					getClientWrapper(configPath)
 					return nil
 				},
 			},
@@ -55,9 +55,8 @@ func main() {
 						Name:  "list",
 						Usage: "prints a list of all subreddits you are subscribed to",
 						Action: func(c *cli.Context) error {
-							credentials, _ := getConfig(configPath)
-							client, _ := authentication.GetClient(credentials)
-							subreddits.PrintSubcriptions(client)
+							wrapper := getClientWrapper(configPath)
+							subreddits.PrintSubcriptions(wrapper)
 							return nil
 						},
 					},
@@ -66,11 +65,10 @@ func main() {
 						Usage: "subscribe to subreddit with `NAME`",
 						Action: func(c *cli.Context) error {
 
-							credentials, _ := getConfig(configPath)
-							client, _ := authentication.GetClient(credentials)
+							wrapper := getClientWrapper(configPath)
 
 							if subPath != "" {
-								subreddits.SubscribeFromFile(client, subPath)
+								subreddits.SubscribeFromFile(wrapper, subPath)
 								return nil
 							}
 
@@ -80,7 +78,7 @@ func main() {
 							}
 							fmt.Println(c.Args().Get(0))
 							for _, v := range c.Args().Slice() {
-								subreddits.Subscribe(client, v)
+								subreddits.Subscribe(wrapper, v)
 							}
 							return nil
 						},
@@ -98,8 +96,7 @@ func main() {
 						Usage: "unsubscribe from subreddit with `NAME`",
 						Action: func(c *cli.Context) error {
 
-							credentials, _ := getConfig(configPath)
-							client, _ := authentication.GetClient(credentials)
+							wrapper := getClientWrapper(configPath)
 
 							if !c.Args().Present() {
 								fmt.Println("missing argument, specify a subreddit name")
@@ -107,7 +104,7 @@ func main() {
 							}
 
 							for _, v := range c.Args().Slice() {
-								subreddits.Unsubscribe(client, v)
+								subreddits.Unsubscribe(wrapper, v)
 							}
 							return nil
 						},
@@ -122,9 +119,8 @@ func main() {
 						Name:  "list",
 						Usage: "prints a list of all posts you have upvoted",
 						Action: func(c *cli.Context) error {
-							credentials, _ := getConfig(configPath)
-							client, _ := authentication.GetClient(credentials)
-							upvoted.PrintUpvoted(client)
+							wrapper := getClientWrapper(configPath)
+							upvoted.PrintUpvoted(wrapper)
 							return nil
 						},
 					},
@@ -146,9 +142,8 @@ func main() {
 								Destination: &outputFormat,
 							}},
 						Action: func(c *cli.Context) error {
-							credentials, _ := getConfig(configPath)
-							client, _ := authentication.GetClient(credentials)
-							export.ExportUpvoted(client, outputFormat)
+							wrapper := getClientWrapper(configPath)
+							export.ExportUpvoted(wrapper, outputFormat)
 							return nil
 						},
 					},
@@ -163,9 +158,11 @@ func main() {
 	}
 }
 
-func getConfig(path string) (credentials reddit.Credentials, err error) {
+func getClientWrapper(configPath string) client_wrapper.ClientWrapper {
 
-	jsonFile, err := os.Open(path)
+	var credentials reddit.Credentials
+
+	jsonFile, err := os.Open(configPath)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -174,5 +171,8 @@ func getConfig(path string) (credentials reddit.Credentials, err error) {
 	byteValue, _ := io.ReadAll(jsonFile)
 	json.Unmarshal(byteValue, &credentials)
 
-	return credentials, nil
+	client, _ := authentication.GetClient(credentials)
+	wrapper := client_wrapper.RedditClient{Client: client}
+
+	return &wrapper
 }

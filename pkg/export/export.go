@@ -6,15 +6,16 @@ import (
 	"os"
 	"text/template"
 
-	"github.com/vartanbeno/go-reddit/v2/reddit"
+	"github.com/clemak27/greddit/pkg/client_wrapper"
 	"github.com/clemak27/greddit/pkg/upvoted"
+	"github.com/vartanbeno/go-reddit/v2/reddit"
 )
 
 var ctx = context.Background()
 
-func ExportUpvoted(client *reddit.Client, format string) (err error) {
+func ExportUpvoted(rc client_wrapper.ClientWrapper, format string) (err error) {
 
-	l := upvoted.GetUpvoted(client)
+	l, err := upvoted.GetUpvoted(rc)
 	var res = make(map[string][]reddit.Post, 0)
 
 	for _, p := range l {
@@ -44,15 +45,6 @@ func ExportUpvoted(client *reddit.Client, format string) (err error) {
 	}
 
 	return nil
-}
-
-func printResult(res map[string][]reddit.Post) {
-	for k := range res {
-		fmt.Println(k)
-		for _, v := range res[k] {
-			fmt.Printf("  %s\n", v.Title)
-		}
-	}
 }
 
 func generateOutputFile(res map[string][]reddit.Post, fn string, ofn string) {
