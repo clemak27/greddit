@@ -1,4 +1,4 @@
-package upvoted
+package saved
 
 import (
 	"reflect"
@@ -8,7 +8,7 @@ import (
 	"github.com/vartanbeno/go-reddit/v2/reddit"
 )
 
-func TestGetUpvoted(t *testing.T) {
+func TestGetSaved(t *testing.T) {
 	type args struct {
 		rc client_wrapper.ClientWrapper
 	}
@@ -19,7 +19,7 @@ func TestGetUpvoted(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "GetUpvoted is successfull",
+			name: "GetSaved is successfull",
 			args: args{
 				rc: &client_wrapper.MockClient{},
 			},
@@ -36,13 +36,13 @@ func TestGetUpvoted(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gotL, err := GetUpvoted(tt.args.rc)
+			gotL, err := GetSaved(tt.args.rc)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("GetUpvoted() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("GetSaved() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(gotL, tt.wantL) {
-				t.Errorf("GetUpvoted() = %v, want %v", gotL, tt.wantL)
+				t.Errorf("GetSaved() = %v, want %v", gotL, tt.wantL)
 			}
 		})
 	}

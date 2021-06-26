@@ -1,4 +1,4 @@
-package upvoted
+package saved
 
 import (
 	"context"
@@ -10,24 +10,24 @@ import (
 
 var ctx = context.Background()
 
-func PrintUpvoted(rc client_wrapper.ClientWrapper) (err error) {
+func PrintSaved(rc client_wrapper.ClientWrapper) (err error) {
 
-	upvoted, _ := GetUpvoted(rc)
+	saved, _ := GetSaved(rc)
 
-	fmt.Printf("You have upvoted %v posts!\n", len(upvoted))
+	fmt.Printf("You have saved %v posts!\n", len(saved))
 
-	for _, s := range upvoted {
+	for _, s := range saved {
 		fmt.Println(s.Title)
 	}
 
 	return nil
 }
 
-func GetUpvoted(rc client_wrapper.ClientWrapper) (l []*reddit.Post, err error) {
+func GetSaved(rc client_wrapper.ClientWrapper) (l []*reddit.Post, err error) {
 
 	opts := reddit.ListOptions{Limit: 100}
 
-	upvoted, _, err := rc.Upvoted(ctx, &reddit.ListUserOverviewOptions{
+	saved, _, _, err := rc.Saved(ctx, &reddit.ListUserOverviewOptions{
 		ListOptions: opts,
 	})
 
@@ -36,17 +36,17 @@ func GetUpvoted(rc client_wrapper.ClientWrapper) (l []*reddit.Post, err error) {
 		return
 	}
 
-	if len(upvoted) == 100 {
-		upvoted = append(upvoted, retrieveMore(upvoted, rc)...)
+	if len(saved) == 100 {
+		saved = append(saved, retrieveMore(saved, rc)...)
 	}
 
-	return upvoted, nil
+	return saved, nil
 }
 
 func retrieveMore(subs []*reddit.Post, rc client_wrapper.ClientWrapper) []*reddit.Post {
 	fli := subs[len(subs)-1].FullID
 	nopts := reddit.ListOptions{Limit: 100, After: fli}
-	nsl, _, err := rc.Upvoted(ctx, &reddit.ListUserOverviewOptions{
+	nsl, _, _, err := rc.Saved(ctx, &reddit.ListUserOverviewOptions{
 		ListOptions: nopts,
 	})
 	if err != nil {
