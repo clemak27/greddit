@@ -163,6 +163,23 @@ func main() {
 							return nil
 						},
 					},
+					{
+						Name:  "saved",
+						Usage: "exports a list of all posts you have saved",
+						Flags: []cli.Flag{
+							&cli.StringFlag{
+								Name:        "format",
+								Aliases:     []string{"f"},
+								Value:       "md",
+								Usage:       "output format of the export",
+								Destination: &outputFormat,
+							}},
+						Action: func(c *cli.Context) error {
+							wrapper := getClientWrapper(configPath)
+							export.ExportSaved(wrapper, outputFormat)
+							return nil
+						},
+					},
 				},
 			},
 		},
