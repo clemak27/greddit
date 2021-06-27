@@ -12,6 +12,7 @@ import (
 	"github.com/clemak27/greddit/pkg/authentication"
 	"github.com/clemak27/greddit/pkg/client_wrapper"
 	"github.com/clemak27/greddit/pkg/export"
+	"github.com/clemak27/greddit/pkg/saved"
 	"github.com/clemak27/greddit/pkg/subreddits"
 	"github.com/clemak27/greddit/pkg/upvoted"
 	"github.com/urfave/cli/v2"
@@ -121,6 +122,21 @@ func main() {
 						Action: func(c *cli.Context) error {
 							wrapper := getClientWrapper(configPath)
 							upvoted.PrintUpvoted(wrapper)
+							return nil
+						},
+					},
+				},
+			},
+			{
+				Name:  "saved",
+				Usage: "saved posts",
+				Subcommands: []*cli.Command{
+					{
+						Name:  "list",
+						Usage: "prints a list of all posts you have saved",
+						Action: func(c *cli.Context) error {
+							wrapper := getClientWrapper(configPath)
+							saved.PrintSaved(wrapper)
 							return nil
 						},
 					},
