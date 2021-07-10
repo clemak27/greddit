@@ -1,6 +1,6 @@
-# exported upvoted posts
+# {{ .Title }}
 
-{{- range $index, $element := . }}
+{{- range $index, $element := .Items }}
 
 ## {{ $index }}
 {{ range $element }}
