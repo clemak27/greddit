@@ -19,23 +19,33 @@ type content struct {
 	Items map[string][]reddit.Post
 }
 
-func ExportUpvoted(rc client_wrapper.ClientWrapper, format string) (err error) {
+func Posts(rc client_wrapper.ClientWrapper, format string, tp string) (err error) {
 
-	l, err := upvoted.GetUpvoted(rc)
-	var res = make(map[string][]reddit.Post, 0)
+	var cont content
 
-	for _, p := range l {
-		sr, exists := res[p.SubredditName]
-		if exists {
-			res[p.SubredditName] = append(sr, *p)
-		} else {
-			res[p.SubredditName] = []reddit.Post{*p}
+	switch tp {
+	case "upvoted":
+		l, err := upvoted.GetUpvoted(rc)
+		if err != nil {
+			fmt.Println("Failed to open output file!")
 		}
-	}
-
-	cont := content{
-		Title: "upvoted Reddit posts",
-		Items: res,
+		res := listOfPosts(l)
+		cont = content{
+			Title: "upvoted Reddit posts",
+			Items: res,
+		}
+	case "saved":
+		l, err := saved.GetSaved(rc)
+		if err != nil {
+			fmt.Println("Failed to open output file!")
+		}
+		res := listOfPosts(l)
+		cont = content{
+			Title: "saved Reddit posts",
+			Items: res,
+		}
+	default:
+		fmt.Printf("Unknown type %s!", tp)
 	}
 
 	switch format {
@@ -50,45 +60,6 @@ func ExportUpvoted(rc client_wrapper.ClientWrapper, format string) (err error) {
 	case "txt":
 		fn := "./pkg/export/txt.tmpl"
 		ofn := "./export-upvoted.txt"
-		generateOutputFile(cont, fn, ofn)
-	default:
-		fmt.Printf("Unknown output format %s! Supported formats are: md, html, txt", format)
-	}
-
-	return nil
-}
-
-func ExportSaved(rc client_wrapper.ClientWrapper, format string) (err error) {
-
-	l, err := saved.GetSaved(rc)
-	var res = make(map[string][]reddit.Post, 0)
-
-	for _, p := range l {
-		sr, exists := res[p.SubredditName]
-		if exists {
-			res[p.SubredditName] = append(sr, *p)
-		} else {
-			res[p.SubredditName] = []reddit.Post{*p}
-		}
-	}
-
-	cont := content{
-		Title: "saved Reddit posts",
-		Items: res,
-	}
-
-	switch format {
-	case "md":
-		fn := "./pkg/export/md.tmpl"
-		ofn := "./export-saved.md"
-		generateOutputFile(cont, fn, ofn)
-	case "html":
-		fn := "./pkg/export/html.tmpl"
-		ofn := "./export-saved.html"
-		generateOutputFile(cont, fn, ofn)
-	case "txt":
-		fn := "./pkg/export/txt.tmpl"
-		ofn := "./export-saved.txt"
 		generateOutputFile(cont, fn, ofn)
 	default:
 		fmt.Printf("Unknown output format %s! Supported formats are: md, html, txt", format)
@@ -115,4 +86,19 @@ func generateOutputFile(cont content, fn string, ofn string) {
 	}
 
 	fmt.Printf("Wrote output to %s!", ofn)
+}
+
+func listOfPosts(l []*reddit.Post) map[string][]reddit.Post {
+	var res = make(map[string][]reddit.Post, 0)
+
+	for _, p := range l {
+		sr, exists := res[p.SubredditName]
+		if exists {
+			res[p.SubredditName] = append(sr, *p)
+		} else {
+			res[p.SubredditName] = []reddit.Post{*p}
+		}
+	}
+
+	return res
 }

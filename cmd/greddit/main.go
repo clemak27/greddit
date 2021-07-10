@@ -159,7 +159,7 @@ func main() {
 							}},
 						Action: func(c *cli.Context) error {
 							wrapper := getClientWrapper(configPath)
-							export.ExportUpvoted(wrapper, outputFormat)
+							export.Posts(wrapper, outputFormat, "upvoted")
 							return nil
 						},
 					},
@@ -176,7 +176,7 @@ func main() {
 							}},
 						Action: func(c *cli.Context) error {
 							wrapper := getClientWrapper(configPath)
-							export.ExportSaved(wrapper, outputFormat)
+							export.Posts(wrapper, outputFormat, "saved")
 							return nil
 						},
 					},
