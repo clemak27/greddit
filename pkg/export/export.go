@@ -14,6 +14,11 @@ import (
 
 var ctx = context.Background()
 
+type content struct {
+	Title string
+	Items map[string][]reddit.Post
+}
+
 func ExportUpvoted(rc client_wrapper.ClientWrapper, format string) (err error) {
 
 	l, err := upvoted.GetUpvoted(rc)
@@ -28,19 +33,24 @@ func ExportUpvoted(rc client_wrapper.ClientWrapper, format string) (err error) {
 		}
 	}
 
+	cont := content{
+		Title: "upvoted Reddit posts",
+		Items: res,
+	}
+
 	switch format {
 	case "md":
 		fn := "./pkg/export/md.tmpl"
 		ofn := "./export-upvoted.md"
-		generateOutputFile(res, fn, ofn)
+		generateOutputFile(cont, fn, ofn)
 	case "html":
 		fn := "./pkg/export/html.tmpl"
 		ofn := "./export-upvoted.html"
-		generateOutputFile(res, fn, ofn)
+		generateOutputFile(cont, fn, ofn)
 	case "txt":
 		fn := "./pkg/export/txt.tmpl"
 		ofn := "./export-upvoted.txt"
-		generateOutputFile(res, fn, ofn)
+		generateOutputFile(cont, fn, ofn)
 	default:
 		fmt.Printf("Unknown output format %s! Supported formats are: md, html, txt", format)
 	}
@@ -62,19 +72,24 @@ func ExportSaved(rc client_wrapper.ClientWrapper, format string) (err error) {
 		}
 	}
 
+	cont := content{
+		Title: "saved Reddit posts",
+		Items: res,
+	}
+
 	switch format {
 	case "md":
 		fn := "./pkg/export/md.tmpl"
 		ofn := "./export-saved.md"
-		generateOutputFile(res, fn, ofn)
+		generateOutputFile(cont, fn, ofn)
 	case "html":
 		fn := "./pkg/export/html.tmpl"
 		ofn := "./export-saved.html"
-		generateOutputFile(res, fn, ofn)
+		generateOutputFile(cont, fn, ofn)
 	case "txt":
 		fn := "./pkg/export/txt.tmpl"
 		ofn := "./export-saved.txt"
-		generateOutputFile(res, fn, ofn)
+		generateOutputFile(cont, fn, ofn)
 	default:
 		fmt.Printf("Unknown output format %s! Supported formats are: md, html, txt", format)
 	}
@@ -82,7 +97,7 @@ func ExportSaved(rc client_wrapper.ClientWrapper, format string) (err error) {
 	return nil
 }
 
-func generateOutputFile(res map[string][]reddit.Post, fn string, ofn string) {
+func generateOutputFile(cont content, fn string, ofn string) {
 
 	tpl, err := template.ParseFiles(fn)
 	if err != nil {
@@ -94,7 +109,7 @@ func generateOutputFile(res map[string][]reddit.Post, fn string, ofn string) {
 		fmt.Println("Failed to open output file!")
 	}
 
-	err = tpl.Execute(f, res)
+	err = tpl.Execute(f, cont)
 	if err != nil {
 		fmt.Println("Failed to write output file!")
 	}

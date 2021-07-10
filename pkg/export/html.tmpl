@@ -6,9 +6,9 @@
 <TITLE>Bookmarks</TITLE>
 <H1>reddit export</H1>
 
-<DT><H3 FOLDED>upvoted posts</H3>
+<DT><H3 FOLDED>{{ .Title }}</H3>
 <DL><p>
-{{- range $index, $element := . }}
+{{- range $index, $element := .Items }}
     <DT><H3 FOLDED>{{ $index }}</H3>
     <DL><p>
     {{ range $element }}
