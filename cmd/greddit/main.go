@@ -77,7 +77,6 @@ func main() {
 								fmt.Println("missing argument, specify a subreddit name")
 								return nil
 							}
-							fmt.Println(c.Args().Get(0))
 							for _, v := range c.Args().Slice() {
 								subreddits.Subscribe(wrapper, v)
 							}
