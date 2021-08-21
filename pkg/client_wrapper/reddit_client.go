@@ -32,12 +32,17 @@ func (r *RedditClient) Upvoted(ctx context.Context, opts *reddit.ListUserOvervie
 	return s, res, err
 }
 
+func (r *RedditClient) Saved(ctx context.Context, opts *reddit.ListUserOverviewOptions) ([]*reddit.Post, []*reddit.Comment, *reddit.Response, error) {
+	s, c, res, err := r.Client.User.Saved(ctx, opts)
+	return s, c, res, err
+}
+
 func (r *RedditClient) Downvoted(ctx context.Context, opts *reddit.ListUserOverviewOptions) ([]*reddit.Post, *reddit.Response, error) {
 	s, res, err := r.Client.User.Downvoted(ctx, opts)
 	return s, res, err
 }
 
-func (r *RedditClient) Saved(ctx context.Context, opts *reddit.ListUserOverviewOptions) ([]*reddit.Post, []*reddit.Comment, *reddit.Response, error) {
-	s, c, res, err := r.Client.User.Saved(ctx, opts)
-	return s, c, res, err
+func (r *RedditClient) Submitted(ctx context.Context, opts *reddit.ListUserOverviewOptions) ([]*reddit.Post, *reddit.Response, error) {
+	s, res, err := r.Client.User.Posts(ctx, opts)
+	return s, res, err
 }

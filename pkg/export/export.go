@@ -9,6 +9,7 @@ import (
 	"github.com/clemak27/greddit/pkg/client_wrapper"
 	"github.com/clemak27/greddit/pkg/downvoted"
 	"github.com/clemak27/greddit/pkg/saved"
+	"github.com/clemak27/greddit/pkg/submitted"
 	"github.com/clemak27/greddit/pkg/upvoted"
 	"github.com/vartanbeno/go-reddit/v2/reddit"
 )
@@ -42,6 +43,12 @@ func Posts(rc client_wrapper.ClientWrapper, format string, tp string) (err error
 		l, err = downvoted.GetDownvoted(rc)
 		if err != nil {
 			fmt.Println("Failed to get downvoted posts!")
+		}
+	case "submitted":
+		var err error
+		l, err = submitted.GetSubmitted(rc)
+		if err != nil {
+			fmt.Println("Failed to get submitted posts!")
 		}
 	default:
 		fmt.Printf("Unknown type %s!", tp)

@@ -14,6 +14,7 @@ import (
 	"github.com/clemak27/greddit/pkg/downvoted"
 	"github.com/clemak27/greddit/pkg/export"
 	"github.com/clemak27/greddit/pkg/saved"
+	"github.com/clemak27/greddit/pkg/submitted"
 	"github.com/clemak27/greddit/pkg/subreddits"
 	"github.com/clemak27/greddit/pkg/upvoted"
 	"github.com/urfave/cli/v2"
@@ -158,6 +159,21 @@ func main() {
 				},
 			},
 			{
+				Name:  "submitted",
+				Usage: "submitted posts",
+				Subcommands: []*cli.Command{
+					{
+						Name:  "list",
+						Usage: "prints a list of all posts you have submitted",
+						Action: func(c *cli.Context) error {
+							wrapper := getClientWrapper(configPath)
+							submitted.PrintSubmitted(wrapper)
+							return nil
+						},
+					},
+				},
+			},
+			{
 				Name:  "export",
 				Usage: "export posts",
 				Subcommands: []*cli.Command{
@@ -209,6 +225,23 @@ func main() {
 						Action: func(c *cli.Context) error {
 							wrapper := getClientWrapper(configPath)
 							export.Posts(wrapper, outputFormat, "downvoted")
+							return nil
+						},
+					},
+					{
+						Name:  "submitted",
+						Usage: "exports a list of all posts you have submitted",
+						Flags: []cli.Flag{
+							&cli.StringFlag{
+								Name:        "format",
+								Aliases:     []string{"f"},
+								Value:       "md",
+								Usage:       "output format of the export",
+								Destination: &outputFormat,
+							}},
+						Action: func(c *cli.Context) error {
+							wrapper := getClientWrapper(configPath)
+							export.Posts(wrapper, outputFormat, "submitted")
 							return nil
 						},
 					},
