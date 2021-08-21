@@ -205,7 +205,8 @@ func main() {
 							}},
 						Action: func(c *cli.Context) error {
 							wrapper := getClientWrapper(configPath)
-							export.Posts(wrapper, outputFormat, "upvoted")
+							err := export.Posts(wrapper, outputFormat, "upvoted")
+							handleError(err)
 							return nil
 						},
 					},
@@ -222,7 +223,8 @@ func main() {
 							}},
 						Action: func(c *cli.Context) error {
 							wrapper := getClientWrapper(configPath)
-							export.Posts(wrapper, outputFormat, "saved")
+							err := export.Posts(wrapper, outputFormat, "saved")
+							handleError(err)
 							return nil
 						},
 					},
@@ -239,7 +241,8 @@ func main() {
 							}},
 						Action: func(c *cli.Context) error {
 							wrapper := getClientWrapper(configPath)
-							export.Comments(wrapper, outputFormat, "saved-comments")
+							err := export.Comments(wrapper, outputFormat, "saved-comments")
+							handleError(err)
 							return nil
 						},
 					},
@@ -256,7 +259,8 @@ func main() {
 							}},
 						Action: func(c *cli.Context) error {
 							wrapper := getClientWrapper(configPath)
-							export.Posts(wrapper, outputFormat, "downvoted")
+							err := export.Posts(wrapper, outputFormat, "downvoted")
+							handleError(err)
 							return nil
 						},
 					},
@@ -273,7 +277,8 @@ func main() {
 							}},
 						Action: func(c *cli.Context) error {
 							wrapper := getClientWrapper(configPath)
-							export.Posts(wrapper, outputFormat, "submitted")
+							err := export.Posts(wrapper, outputFormat, "submitted")
+							handleError(err)
 							return nil
 						},
 					},
@@ -305,4 +310,12 @@ func getClientWrapper(configPath string) client_wrapper.ClientWrapper {
 	wrapper := client_wrapper.RedditClient{Client: client}
 
 	return &wrapper
+}
+
+func handleError(err error) {
+	if err != nil {
+		fmt.Println("An error occured:")
+		fmt.Println(err)
+		os.Exit(1)
+	}
 }
