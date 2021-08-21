@@ -7,6 +7,7 @@ import (
 	"text/template"
 
 	"github.com/clemak27/greddit/pkg/client_wrapper"
+	"github.com/clemak27/greddit/pkg/downvoted"
 	"github.com/clemak27/greddit/pkg/saved"
 	"github.com/clemak27/greddit/pkg/upvoted"
 	"github.com/vartanbeno/go-reddit/v2/reddit"
@@ -21,45 +22,40 @@ type content struct {
 
 func Posts(rc client_wrapper.ClientWrapper, format string, tp string) (err error) {
 
-	var cont content
+	var l []*reddit.Post
 
 	switch tp {
 	case "upvoted":
-		l, err := upvoted.GetUpvoted(rc)
+		var err error
+		l, err = upvoted.GetUpvoted(rc)
 		if err != nil {
-			fmt.Println("Failed to open output file!")
-		}
-		res := listOfPosts(l)
-		cont = content{
-			Title: "upvoted Reddit posts",
-			Items: res,
+			fmt.Println("Failed to get upvoted posts!")
 		}
 	case "saved":
-		l, err := saved.GetSaved(rc)
+		var err error
+		l, err = saved.GetSaved(rc)
 		if err != nil {
-			fmt.Println("Failed to open output file!")
+			fmt.Println("Failed to get saved posts!")
 		}
-		res := listOfPosts(l)
-		cont = content{
-			Title: "saved Reddit posts",
-			Items: res,
+	case "downvoted":
+		var err error
+		l, err = downvoted.GetDownvoted(rc)
+		if err != nil {
+			fmt.Println("Failed to get downvoted posts!")
 		}
 	default:
 		fmt.Printf("Unknown type %s!", tp)
 	}
 
+	cont := content{
+		Title: fmt.Sprintf("%v reddit posts", tp),
+		Items: listOfPosts(l),
+	}
+
 	switch format {
-	case "md":
-		fn := "./pkg/export/md.tmpl"
-		ofn := "./export-upvoted.md"
-		generateOutputFile(cont, fn, ofn)
-	case "html":
-		fn := "./pkg/export/html.tmpl"
-		ofn := "./export-upvoted.html"
-		generateOutputFile(cont, fn, ofn)
-	case "txt":
-		fn := "./pkg/export/txt.tmpl"
-		ofn := "./export-upvoted.txt"
+	case "md", "html", "txt":
+		fn := fmt.Sprintf("./pkg/export/%v.tmpl", format)
+		ofn := fmt.Sprintf("./export-%v.%v", tp, format)
 		generateOutputFile(cont, fn, ofn)
 	default:
 		fmt.Printf("Unknown output format %s! Supported formats are: md, html, txt", format)

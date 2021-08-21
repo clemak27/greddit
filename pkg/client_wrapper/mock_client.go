@@ -43,6 +43,18 @@ func (r *MockClient) Upvoted(ctx context.Context, opts *reddit.ListUserOverviewO
 	return u, nil, nil
 }
 
+func (r *MockClient) Downvoted(ctx context.Context, opts *reddit.ListUserOverviewOptions) ([]*reddit.Post, *reddit.Response, error) {
+	u := []*reddit.Post{
+		{
+			ID:     "1",
+			FullID: "111",
+			URL:    "localhost:8080",
+			Title:  "testPost",
+		},
+	}
+	return u, nil, nil
+}
+
 func (r *MockClient) Saved(ctx context.Context, opts *reddit.ListUserOverviewOptions) ([]*reddit.Post, []*reddit.Comment, *reddit.Response, error) {
 	s := []*reddit.Post{
 		{
