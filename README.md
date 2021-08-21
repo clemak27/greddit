@@ -69,3 +69,6 @@ The following commands are available:
   - you can choose the output format with an `-f` flag:
     - Exporting posts is supported in markdown, html and text.
     - Exporting comments is supported in md.
+
+Additional commands and functionality might come in the future,
+when I'm not occupied with other projects/work/things.
