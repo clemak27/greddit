@@ -98,6 +98,13 @@ func Comments(rc client_wrapper.ClientWrapper, format string, tp string) (err er
 			fmt.Println("Failed to get saved comments!")
 			return err
 		}
+	case "submitted-comments":
+		var err error
+		l, err = submitted.GetSubmittedComments(rc)
+		if err != nil {
+			fmt.Println("Failed to get saved comments!")
+			return err
+		}
 	default:
 		fmt.Printf("Unknown type %s!", tp)
 	}

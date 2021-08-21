@@ -85,3 +85,14 @@ func (r *MockClient) Submitted(ctx context.Context, opts *reddit.ListUserOvervie
 	}
 	return u, nil, nil
 }
+
+func (r *MockClient) SubmittedComments(ctx context.Context, opts *reddit.ListUserOverviewOptions) ([]*reddit.Comment, *reddit.Response, error) {
+	u := []*reddit.Comment{
+		{
+			ID:        "62",
+			FullID:    "6254",
+			PostTitle: "Some post about stuff",
+		},
+	}
+	return u, nil, nil
+}

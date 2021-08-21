@@ -46,3 +46,8 @@ func (r *RedditClient) Submitted(ctx context.Context, opts *reddit.ListUserOverv
 	s, res, err := r.Client.User.Posts(ctx, opts)
 	return s, res, err
 }
+
+func (r *RedditClient) SubmittedComments(ctx context.Context, opts *reddit.ListUserOverviewOptions) ([]*reddit.Comment, *reddit.Response, error) {
+	s, res, err := r.Client.User.Comments(ctx, opts)
+	return s, res, err
+}

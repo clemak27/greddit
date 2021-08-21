@@ -57,3 +57,51 @@ func retrieveMore(subs []*reddit.Post, rc client_wrapper.ClientWrapper) []*reddi
 	}
 	return nsl
 }
+
+func PrintSubmittedComments(rc client_wrapper.ClientWrapper) (err error) {
+
+	submitted, _ := GetSubmittedComments(rc)
+
+	fmt.Printf("You have submitted %v comments!\n", len(submitted))
+
+	for _, s := range submitted {
+		fmt.Println("You commented in:", s.PostTitle)
+	}
+
+	return nil
+}
+
+func GetSubmittedComments(rc client_wrapper.ClientWrapper) (l []*reddit.Comment, err error) {
+
+	opts := reddit.ListOptions{Limit: 100}
+
+	submitted, _, err := rc.SubmittedComments(ctx, &reddit.ListUserOverviewOptions{
+		ListOptions: opts,
+	})
+
+	if err != nil {
+		fmt.Println("Failed to retrieve post list:", err)
+		return
+	}
+
+	if len(submitted) == 100 {
+		submitted = append(submitted, retrieveMoreComments(submitted, rc)...)
+	}
+
+	return submitted, nil
+}
+
+func retrieveMoreComments(subs []*reddit.Comment, rc client_wrapper.ClientWrapper) []*reddit.Comment {
+	fli := subs[len(subs)-1].FullID
+	nopts := reddit.ListOptions{Limit: 100, After: fli}
+	nsl, _, err := rc.SubmittedComments(ctx, &reddit.ListUserOverviewOptions{
+		ListOptions: nopts,
+	})
+	if err != nil {
+		fmt.Println("Failed to retrieve subreddit list:", err)
+	}
+	if len(nsl) == 100 {
+		nsl = append(nsl, retrieveMoreComments(nsl, rc)...)
+	}
+	return nsl
+}

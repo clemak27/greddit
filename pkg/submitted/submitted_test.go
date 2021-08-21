@@ -47,3 +47,42 @@ func TestGetSubmitted(t *testing.T) {
 		})
 	}
 }
+
+func TestGetSubmittedComments(t *testing.T) {
+	type args struct {
+		rc client_wrapper.ClientWrapper
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantL   []*reddit.Comment
+		wantErr bool
+	}{
+		{
+			name: "GetSubmittedComments is successfull",
+			args: args{
+				rc: &client_wrapper.MockClient{},
+			},
+			wantL: []*reddit.Comment{
+				{
+					ID:        "62",
+					FullID:    "6254",
+					PostTitle: "Some post about stuff",
+				},
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gotL, err := GetSubmittedComments(tt.args.rc)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("GetSubmittedComments() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(gotL, tt.wantL) {
+				t.Errorf("GetSubmittedComments() = %v, want %v", gotL, tt.wantL)
+			}
+		})
+	}
+}

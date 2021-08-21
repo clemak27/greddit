@@ -14,4 +14,5 @@ type ClientWrapper interface {
 	Saved(ctx context.Context, opts *reddit.ListUserOverviewOptions) ([]*reddit.Post, []*reddit.Comment, *reddit.Response, error)
 	Downvoted(ctx context.Context, opts *reddit.ListUserOverviewOptions) ([]*reddit.Post, *reddit.Response, error)
 	Submitted(ctx context.Context, opts *reddit.ListUserOverviewOptions) ([]*reddit.Post, *reddit.Response, error)
+	SubmittedComments(ctx context.Context, opts *reddit.ListUserOverviewOptions) ([]*reddit.Comment, *reddit.Response, error)
 }

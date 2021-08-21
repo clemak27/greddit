@@ -189,6 +189,21 @@ func main() {
 				},
 			},
 			{
+				Name:  "submitted-comments",
+				Usage: "submitted comments",
+				Subcommands: []*cli.Command{
+					{
+						Name:  "list",
+						Usage: "prints a list of all comments you have submitted",
+						Action: func(c *cli.Context) error {
+							wrapper := getClientWrapper(configPath)
+							submitted.PrintSubmittedComments(wrapper)
+							return nil
+						},
+					},
+				},
+			},
+			{
 				Name:  "export",
 				Usage: "export posts",
 				Subcommands: []*cli.Command{
@@ -278,6 +293,24 @@ func main() {
 						Action: func(c *cli.Context) error {
 							wrapper := getClientWrapper(configPath)
 							err := export.Posts(wrapper, outputFormat, "submitted")
+							handleError(err)
+							return nil
+						},
+					},
+					{
+						Name:  "submitted-comments",
+						Usage: "exports a list of all comments you have submitted",
+						Flags: []cli.Flag{
+							&cli.StringFlag{
+								Name:        "format",
+								Aliases:     []string{"f"},
+								Value:       "md",
+								Usage:       "output format of the export",
+								Destination: &outputFormat,
+							}},
+						Action: func(c *cli.Context) error {
+							wrapper := getClientWrapper(configPath)
+							err := export.Comments(wrapper, outputFormat, "submitted-comments")
 							handleError(err)
 							return nil
 						},
