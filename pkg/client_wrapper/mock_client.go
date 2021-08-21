@@ -54,9 +54,9 @@ func (r *MockClient) Saved(ctx context.Context, opts *reddit.ListUserOverviewOpt
 	}
 	c := []*reddit.Comment{
 		{
-			ID:     "1",
-			FullID: "111",
-			Body:   "looks good to me",
+			ID:        "62",
+			FullID:    "6254",
+			PostTitle: "Some post about stuff",
 		},
 	}
 	return s, c, nil, nil

@@ -21,6 +21,11 @@ type content struct {
 	Items map[string][]reddit.Post
 }
 
+type commentContent struct {
+	Title string
+	Items []*reddit.Comment
+}
+
 func Posts(rc client_wrapper.ClientWrapper, format string, tp string) (err error) {
 
 	var l []*reddit.Post
@@ -31,6 +36,7 @@ func Posts(rc client_wrapper.ClientWrapper, format string, tp string) (err error
 		l, err = upvoted.GetUpvoted(rc)
 		if err != nil {
 			fmt.Println("Failed to get upvoted posts!")
+			return err
 		}
 	case "saved":
 		var err error
@@ -71,6 +77,38 @@ func Posts(rc client_wrapper.ClientWrapper, format string, tp string) (err error
 	return nil
 }
 
+func Comments(rc client_wrapper.ClientWrapper, format string, tp string) (err error) {
+
+	var l []*reddit.Comment
+
+	switch tp {
+	case "saved-comments":
+		var err error
+		l, err = saved.GetSavedComments(rc)
+		if err != nil {
+			fmt.Println("Failed to get saved comments!")
+		}
+	default:
+		fmt.Printf("Unknown type %s!", tp)
+	}
+
+	cont := commentContent{
+		Title: fmt.Sprintf("saved reddit comments"),
+		Items: l,
+	}
+
+	switch format {
+	case "md":
+		fn := fmt.Sprintf("./pkg/export/comment-%v.tmpl", format)
+		ofn := fmt.Sprintf("./export-%v.%v", tp, format)
+		generateCommentOutputFile(cont, fn, ofn)
+	default:
+		fmt.Printf("Unknown output format %s! Currently only md is supported", format)
+	}
+
+	return nil
+}
+
 func generateOutputFile(cont content, fn string, ofn string) {
 
 	tpl, err := template.ParseFiles(fn)
@@ -104,4 +142,24 @@ func listOfPosts(l []*reddit.Post) map[string][]reddit.Post {
 	}
 
 	return res
+}
+
+func generateCommentOutputFile(cont commentContent, fn string, ofn string) {
+
+	tpl, err := template.ParseFiles(fn)
+	if err != nil {
+		fmt.Println("Failed to parse template")
+	}
+
+	f, err := os.Create(ofn)
+	if err != nil {
+		fmt.Println("Failed to open output file!")
+	}
+
+	err = tpl.Execute(f, cont)
+	if err != nil {
+		fmt.Println("Failed to write output file!")
+	}
+
+	fmt.Printf("Wrote output to %s!", ofn)
 }

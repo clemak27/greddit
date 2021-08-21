@@ -144,6 +144,21 @@ func main() {
 				},
 			},
 			{
+				Name:  "saved-comments",
+				Usage: "saved comments",
+				Subcommands: []*cli.Command{
+					{
+						Name:  "list",
+						Usage: "prints a list of all comments you have saved",
+						Action: func(c *cli.Context) error {
+							wrapper := getClientWrapper(configPath)
+							saved.PrintSavedComments(wrapper)
+							return nil
+						},
+					},
+				},
+			},
+			{
 				Name:  "downvoted",
 				Usage: "downvoted posts",
 				Subcommands: []*cli.Command{
@@ -208,6 +223,23 @@ func main() {
 						Action: func(c *cli.Context) error {
 							wrapper := getClientWrapper(configPath)
 							export.Posts(wrapper, outputFormat, "saved")
+							return nil
+						},
+					},
+					{
+						Name:  "saved-comments",
+						Usage: "exports a list of all comments you have saved",
+						Flags: []cli.Flag{
+							&cli.StringFlag{
+								Name:        "format",
+								Aliases:     []string{"f"},
+								Value:       "md",
+								Usage:       "output format of the export",
+								Destination: &outputFormat,
+							}},
+						Action: func(c *cli.Context) error {
+							wrapper := getClientWrapper(configPath)
+							export.Comments(wrapper, outputFormat, "saved-comments")
 							return nil
 						},
 					},

@@ -1,0 +1,11 @@
+# {{ .Title }}
+
+{{- range .Items }}
+
+<blockquote>
+{{ .Body }}
+</blockquote>
+/u/{{ .Author }}, [{{.PostTitle}}](https://reddit.com{{.Permalink}})
+  
+
+{{- end }}
