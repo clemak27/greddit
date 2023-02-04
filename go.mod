@@ -1,9 +1,9 @@
 module github.com/clemak27/greddit
 
-go 1.18
+go 1.20
 
 require (
-	github.com/urfave/cli/v2 v2.8.1
+	github.com/urfave/cli/v2 v2.24.3
 	github.com/vartanbeno/go-reddit/v2 v2.0.1
 )
 
